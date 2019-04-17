@@ -19,16 +19,24 @@ namespace RecipeService.Repository
 
         public void Add(Recipe recipe)
         {
-            var recipesList = _RecipeContext.Recipes.Where(r => r.Title.Equals(recipe.Title)).ToList();
-
-            if (recipesList.Count == 0)
+            var recipes = _RecipeContext.Recipes.ToList();
+            if (recipes.Count !=0)
             {
-                _RecipeContext.Recipes.Add(recipe);
-                _RecipeContext.SaveChanges();
+                var recipesList = recipes.Where(r => r.Title.Equals(recipe.Title)).ToList();
+
+                if (recipesList.Count == 0)
+                {
+                    _RecipeContext.Recipes.Add(recipe);
+                    _RecipeContext.SaveChanges();
+                }
+                else
+                {
+                    throw ExceptionsCodes.DuplicatedContent;
+                }
             }
             else
             {
-                throw ExceptionsCodes.DuplicatedContent;
+                throw ExceptionsCodes.InternalError;
             }
         }
 
@@ -49,7 +57,6 @@ namespace RecipeService.Repository
             {
                 throw ExceptionsCodes.NoContent;
             }
-            
         }
     }
 }

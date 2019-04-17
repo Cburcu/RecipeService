@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RecipeService.Exceptions;
 using RecipeService.Models;
 
 namespace RecipeService.Context
@@ -16,9 +17,16 @@ namespace RecipeService.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Recipe>().HasMany<Category>(r => r.Categories);
-            modelBuilder.Entity<Recipe>().HasMany<Ingredient>(r => r.Ingredients);
-            modelBuilder.Entity<Recipe>().HasMany<Direction>(r => r.Directions);
+            try
+            {
+                modelBuilder.Entity<Recipe>().HasMany<Category>(r => r.Categories);
+                modelBuilder.Entity<Recipe>().HasMany<Ingredient>(r => r.Ingredients);
+                modelBuilder.Entity<Recipe>().HasMany<Direction>(r => r.Directions);
+            }
+            catch (Exception e)
+            {
+                throw ExceptionsCodes.InternalError;
+            }
         }
 
         public DbSet<Recipe> Recipes { get; set; }

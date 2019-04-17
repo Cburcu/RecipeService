@@ -38,11 +38,6 @@ namespace RecipeService.Controllers
             {
                 return StatusCode(ex.statusCode, ex.message);
             }
-            catch
-            {
-                return
-                    StatusCode(ExceptionsCodes.InternalError.statusCode, ExceptionsCodes.InternalError.message);
-            }
         }
 
         // Put: services/recipe/add
@@ -51,16 +46,16 @@ namespace RecipeService.Controllers
         {
             try
             {
+                if (recipe == null || !ModelState.IsValid)
+                {
+                    return StatusCode(ExceptionsCodes.BadRequest.statusCode, ExceptionsCodes.BadRequest.message);
+                }
                 _RecipeRepository.Add(recipe);
                 return StatusCode(ExceptionsCodes.Succeccful.statusCode, ExceptionsCodes.Succeccful.message);
             }
             catch (ExceptionsCodes ex)
             {
                 return StatusCode(ex.statusCode, ex.message);
-            }
-            catch
-            {
-                return StatusCode(ExceptionsCodes.InternalError.statusCode, ExceptionsCodes.InternalError.message);
             }
         }
 
@@ -76,10 +71,6 @@ namespace RecipeService.Controllers
             catch (ExceptionsCodes ex)
             {
                 return StatusCode(ex.statusCode, ex.message);
-            }
-            catch (Exception e)
-            {
-                return StatusCode(ExceptionsCodes.InternalError.statusCode, ExceptionsCodes.InternalError.message);
             }
         }
     }
